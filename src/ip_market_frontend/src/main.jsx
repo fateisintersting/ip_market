@@ -1,8 +1,12 @@
+// index.js
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import Login from './pages/Login';
+import Register from './pages/Register';
+import { AuthProvider } from './components/auth/InternetIndenityAuth';
+import ProtectedRoute from './components/ProtectedRoute';
 
 import {
   createBrowserRouter,
@@ -11,28 +15,27 @@ import {
   createRoutesFromElements,
 } from "react-router";
 
-
-import Register from './pages/Register';
-
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
-     
-      
-     
-      {/* Protected routes */}
-      
-      <Route path="/" element={<App />}>
-      <Route path="/login" element={<Login />} />
+      <Route path="/" element={
+        <ProtectedRoute>
+          <App />
+        </ProtectedRoute>
+      }>
         <Route path="/register" element={<Register />} />
-        {/* Add more protected routes below if needed */}
-     </Route>
+      </Route>
+
+      {/* Public Routes */}
+      <Route path="/login" element={<Login />} />
     </>
   )
 );
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
+    <AuthProvider>
       <RouterProvider router={router} />
+    </AuthProvider>
   </React.StrictMode>
 );
